@@ -1,3 +1,3 @@
 3d-vector-lib
 ===================
-(load "load") in repl to use.
+(load "load") then (in-package :test) in repl to use.
