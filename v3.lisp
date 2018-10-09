@@ -88,12 +88,7 @@
 (defun lensqr (a)
   (declare (type v3 a)
            (optimize (speed 1) (safety 1) (compilation-speed 0)))
-  (let ((x (v3x a))
-        (y (v3y a))
-        (z (v3y a)))
-        (declare (type double-float x y z)
-                 (optimize (speed 3) (safety 0) (compilation-speed 0)))
-        (+ (expt x 2) (expt y 2) (expt z 2))))
+  (+ (expt (v3x a) 2) (expt (v3y a) 2) (expt (v3z a) 2)))
 
 (defun len (a)
   (declare (type v3 a)
