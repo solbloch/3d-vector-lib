@@ -1,3 +1,6 @@
+(compile-file "packages")
+(compile-file "v3")
+(compile-file "test")
 (load "packages")
 (load "v3")
 (load "test")

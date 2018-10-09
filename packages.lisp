@@ -7,7 +7,12 @@
    #:add
    #:nsub
    #:sub
-   #:nmul))
+   #:nmul
+   #:mul
+   #:ndiv
+   #:div
+   #:dot
+   #:cross))
 
 (defpackage :test
   (:use :cl :vector3d))
