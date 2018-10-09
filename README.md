@@ -1,1 +1,3 @@
-# 3d-vector-lib
+3d-vector-lib
+===================
+(load "load") in repl to use.
