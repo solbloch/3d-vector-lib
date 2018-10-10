@@ -2,6 +2,7 @@
 (defpackage :vector3d
   (:use :cl)
   (:export
+   #:make-v3
    #:v3
    #:nadd
    #:add
@@ -16,13 +17,12 @@
    #:lensqr
    #:len))
 
-(defpackage :state
+(defpackage :state3d
   (:use :cl :vector3d)
   (:export
+   #:make-state
    #:state
-   #:nc-o-mass
-   #:c-o-mass
    #:dist))
 
 (defpackage :test
-  (:use :cl :vector3d :state))
+  (:use :cl :vector3d :state3d))
