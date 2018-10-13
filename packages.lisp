@@ -4,6 +4,9 @@
   (:export
    #:make-v3
    #:v3
+   #:v3x
+   #:v3y
+   #:v3z
    #:nadd
    #:add
    #:nsub
@@ -15,14 +18,20 @@
    #:dot
    #:cross
    #:lensqr
-   #:len))
+   #:len
+   #:reset))
 
 (defpackage :state3d
   (:use :cl :vector3d)
   (:export
    #:make-state
    #:state
-   #:dist))
+   #:dist
+   #:nc-o-mass
+   #:state-pos
+   #:state-vel
+   #:state-acc
+   #:state-mass))
 
 (defpackage :test
   (:use :cl :vector3d :state3d))
