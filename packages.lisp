@@ -31,7 +31,9 @@
    #:state-pos
    #:state-vel
    #:state-acc
-   #:state-mass))
+   #:state-mass
+   #:posi
+   #:velo))
 
 (defpackage :test
   (:use :cl :vector3d :state3d))
