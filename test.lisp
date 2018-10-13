@@ -47,7 +47,7 @@
     (declare (type state b))
     (velo b dt)))
 
-(defun cycle (dt)
+(defun cycle-leap-frog (dt)
   (declare (type double-float dt)
            (optimize (speed 3) (safety 1) (compilation-speed 0)))
   (let ((dt-h (/ dt 2)))
@@ -62,12 +62,16 @@
      ((> ti 1000))
   (declare (type double-float ti dt)
            (optimize (speed 3) (safety 1) (compilation-speed 0)))
-  (cycle dt)
-  (dolist (b bodies)
-    (declare (type state b))
-    (format t "c3 ~f ~f ~f 0.1~%"
-            (v3x (state-pos b))
-            (v3y (state-pos b))
-            (v3z (state-pos b))))
+  (cycle-leap-frog dt)
+  (let ((count 0))
+    (declare (type fixnum count))
+    (dolist (b bodies)
+      (declare (type state b))
+      (format t "ct3 ~d ~f ~f ~f 0.1~%"
+              count
+              (v3x (state-pos b))
+              (v3y (state-pos b))
+              (v3z (state-pos b)))
+      (setf count (+ 1 count))))
   (format t "F~%"))
 
