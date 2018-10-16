@@ -73,5 +73,8 @@
               (v3y (state-pos b))
               (v3z (state-pos b)))
       (setf count (+ 1 count))))
+  (format t "T -1 .95~%energy: ~f~%"
+          (sqrt (+ (expt (v3x (state-vel earth)) 2)
+                   (expt (v3y (state-vel earth)) 2)
+                   (expt (v3z (state-vel earth)) 2))))
   (format t "F~%"))
-
