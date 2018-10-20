@@ -8,7 +8,9 @@
 
 (defvar dt 0.01d0)
 
-(defvar sun (state 0d0 0d0 0d0 0d0 0d0 0d0 1d0))
+(defvar frameskip 1)
+
+(defvar sun (state .2d0 .3d0 0d0 0d0 0d0 0d0 1d0))
 
 (defvar earth (state 1d0 0d0 0d0 0d0 (* 2 pi) 0d0 3.003d-6))
 
@@ -22,7 +24,7 @@
          (rlen (len r)))
     (declare (type double-float rlen)
              (type v3 r))
-    (nmul r (* G (state-mass b) (/ 1 (expt rlen 3))))
+    (nmul r (* G (state-mass b) (/ 1 (expt rlen 3.1))))
     (nadd (state-acc a) r)))
 
 (defun accel-loop-brute ()
@@ -58,8 +60,9 @@
     (posi-loop dt-h)))
 
 (format t "F~%F~%")
-(do* ((ti 0d0 (+ ti dt)))
-     ((> ti 1000))
+(do* ((ti 0d0 (+ ti dt))
+      (framecount 1 (1+ framecount)))
+     ((> ti 2000))
   (declare (type double-float ti dt)
            (optimize (speed 3) (safety 1) (compilation-speed 0)))
   (cycle-leap-frog dt)
@@ -67,14 +70,16 @@
     (declare (type fixnum count))
     (dolist (b bodies)
       (declare (type state b))
-      (format t "ct3 ~d ~f ~f ~f 0.1~%"
-              count
-              (v3x (state-pos b))
-              (v3y (state-pos b))
-              (v3z (state-pos b)))
+      (if (eq (mod framecount frameskip) 0)
+          (format t "ct3 ~d ~f ~f ~f 0.1~%"
+               count
+               (v3x (state-pos b))
+               (v3y (state-pos b))
+               (v3z (state-pos b))) nil)
       (setf count (+ 1 count))))
   (format t "T -1 .95~%energy: ~f~%"
-          (sqrt (+ (expt (v3x (state-vel earth)) 2)
-                   (expt (v3y (state-vel earth)) 2)
-                   (expt (v3z (state-vel earth)) 2))))
-  (format t "F~%"))
+          (- (* .5 (+ (expt (v3x (state-vel earth)) 2) (expt (v3y (state-vel earth)) 2) (expt (v3z (state-vel earth)) 2)))
+             (/ (* 4 (expt pi 2))
+                (dist earth sun))))
+  (if (eq (mod framecount frameskip) 0)
+      (format t "F~%") nil))
