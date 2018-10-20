@@ -95,7 +95,7 @@
            (optimize (speed 1) (safety 1) (compilation-speed 0)))
   (sqrt (lensqr a)))
 
-(defun reset (a)
+(defun v3-reset (a)
   (declare (type v3 a)
            (optimize (speed 3) (safety 1) (compilation-speed 0)))
   (setf (v3x a) 0d0)

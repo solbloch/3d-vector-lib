@@ -37,4 +37,4 @@
            (optimize (speed 3) (safety 1) (compilation-speed 0)))
   (nmul (state-acc a) dt)
   (nadd (state-vel a) (state-acc a))
-  (reset (state-acc a)))
+  (v3-reset (state-acc a)))

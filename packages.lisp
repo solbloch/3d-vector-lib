@@ -19,7 +19,7 @@
    #:cross
    #:lensqr
    #:len
-   #:reset))
+   #:v3-reset))
 
 (defpackage :state3d
   (:use :cl :vector3d)
@@ -34,6 +34,3 @@
    #:state-mass
    #:posi
    #:velo))
-
-(defpackage :test
-  (:use :cl :vector3d :state3d))
