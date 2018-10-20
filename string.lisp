@@ -9,21 +9,14 @@
 (defvar *dt* .01d0)
 
 (defun make-pendulum (length theta0 x y)
-  "Returns an anonymous function with enclosed state representing a pendulum."
   (let* ((theta (* (/ theta0 180) pi))
          (velocity 0))
     (if (< length 40) (setf length 40)) ;;avoid a divide-by-zero
     (lambda ()
-      ;; Draws the pendulum, updating its location and speed.
-      ;; (sdl:draw-line (sdl:point :x x :y 1)
-      ;;                (sdl:point :x (+ (* (sin theta) length) x)
-      ;;                           :y (* (cos theta) length)))
       (sdl:draw-filled-circle (sdl:point :x (+ (* (sin theta) length) x)
                                          :y (+ (* (cos theta) length) y))
                               5
                               :color sdl:*yellow*)
-      ;; :stroke-color sdl:*white*)
-      ;;The magic constant approximates the speed we want for a given frame-rate.
       (incf velocity (* (sqrt (/ 9.81 length )) (sin theta) (* *frame-rate* -.01)))
       (incf theta (* velocity (* *frame-rate* .01)))
       (setf velocity (* velocity *damping*)))))
@@ -34,13 +27,13 @@
 (defvar nlen (/ len (+ 4 n)))
 (defvar nodes (loop for i from 1 to (+ 3 n) collect
                                             (state (* i nlen) 100d0 0d0 0d0 0d0 0d0 1d0)))
-(defun init ()
+(defun init (height width)
   (setf n 250)
   (setf len 100d0)
   (setf nlen (/ len (+ 4 n)))
   (setf k 10d0)
   (setf nodes (loop for i from 1 to (+ 3 n) collect
-                                            (state (* i nlen) 100d0 0d0 0d0 0d0 0d0 1d0))))
+                                            (state (+ width (* i -1 nlen (/ width len))) (/ height 2d0) 0d0 0d0 0d0 0d0 1d0))))
 
 (defun string-draw ()
   (dolist (i (butlast nodes))
@@ -48,6 +41,9 @@
                                        :y (v3y (state-pos i)))
                             3
                             :color sdl:*yellow*)))
+
+;; (defun vibrate ()
+;;    (loop for i from 0 to )
 
 (defun string-update ()
   (dolist (i nodes)
@@ -77,24 +73,19 @@
     (nmul (state-vel i) .9999d0)))
 
 (defun main (&optional (w 640) (h 480))
-  (init)
+  (init h w)
   (sdl:with-init ()
     (sdl:window w h :title-caption "Pendulums"
                     :fps (make-instance 'sdl:fps-fixed))
-    (setf (sdl:frame-rate) 100)
+    (setf (sdl:frame-rate) 60)
     (let ((pendulums nil))
       (sdl:with-events ()
         (:quit-event () t)
         (:idle ()
-               ;; (when (sdl:key-p)
-               ;;   (incf (v3y (state-pos (car nodes))) -1d0))
-               ;; (when (sdl:key= :key :sdl-key-down)
-               ;;  (incf (v3y (state-pos (car nodes))) 2d0))
                (sdl:clear-display sdl:*black*)
                (mapcar #'funcall pendulums) ;;Draw all the pendulums
-               ;; (mapcar #'funcall oscillators)
                (string-draw)
-               (loop for i from 1 to 100 do (string-update))
+               (loop for i from 1 to 80 do (string-update))
                (sdl:update-display))
         (:mouse-motion-event (:state state :x x :y y :x-rel x-rel :y-rel y-rel)
                              (setf (v3x (state-pos (car nodes))) (coerce x 'double-float))
@@ -109,12 +100,6 @@
                                 (sdl:push-quit-event))
                                ((sdl:key= key :sdl-key-q)
                                 (sdl:push-quit-event))
-                               ;; ((sdl:key= key :sdl-button-wheelup)
-                               ;;  (incf (v3y (state-pos (car nodes))) -2d0))
-                               ;; ((sdl:key= key :sdl-button-wheeldown)
-                               ;;  (incf (v3y (state-pos (car nodes))) 2d0))
-                               ;; ((sdl:key= key :sdl-key-k)
-                               ;;  (push (make-oscillator 40 700d0 20) oscillators))
                                ((sdl:key= key :sdl-key-space)
                                 (loop for i from 1 to 1000 do
                                   (push (make-pendulum (random (* h .85))
