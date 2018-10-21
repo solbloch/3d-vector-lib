@@ -49,8 +49,9 @@
                             3
                             :color sdl:*yellow*)))
 
-(defun string-update ()
-  (string-vibrate 100d0)
+(defun string-update (oscil)
+  (if oscil
+      (string-vibrate 100d0))
   (dolist (i nodes)
     (posi i *dt*))
   (do* ((last (car nodes) (car current))
@@ -96,14 +97,15 @@
     (sdl:window w h :title-caption "Pendulums"
                     :fps (make-instance 'sdl:fps-fixed))
     (setf (sdl:frame-rate) 60)
-    (let ((pendulums nil))
+    (let ((pendulums nil)
+          (oscil t))
       (sdl:with-events ()
         (:quit-event () t)
         (:idle ()
                (sdl:clear-display sdl:*black*)
-               (mapcar #'funcall pendulums) ;;Draw all the pendulums
+               (mapcar #'funcall pendulums)
                (string-draw)
-               (loop for i from 1 to 80 do (string-update))
+               (loop for i from 1 to 80 do (string-update oscil))
                (sdl:update-display))
         (:mouse-motion-event (:state state :x x :y y :x-rel x-rel :y-rel y-rel)
                              (setf (v3x (state-pos (car nodes))) (coerce x 'double-float))
@@ -121,10 +123,8 @@
                                 (sdl:push-quit-event))
                                ((sdl:key= key :sdl-key-q)
                                 (sdl:push-quit-event))
-                               ((sdl:key= key :sdl-key-w)
-                                (incf period 40))
-                               ((sdl:key= key :sdl-key-s)
-                                (incf period -40))
+                               ((sdl:key= key :sdl-key-o)
+                                (setf oscil (not oscil)))
                                ((sdl:key= key :sdl-key-space)
                                 (loop for i from 1 to 1000 do
                                   (push (make-pendulum (random (* h .85))
