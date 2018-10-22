@@ -99,7 +99,6 @@
     (setf (sdl:frame-rate) 60)
     (let ((pendulums nil)
           (oscil t)
-          (mouse-toggle t)
           (string-toggle t))
       (sdl:with-events ()
         (:quit-event () t)
@@ -111,12 +110,12 @@
                      (string-draw)
                      (loop for i from 1 to 80 do (string-update oscil))))
                (sdl:update-display))
-        (:mouse-motion-event (:state state :x x :y y :x-rel x-rel :y-rel y-rel)
+        (:mouse-motion-event (:x x :y y)
                              (setf (v3x (state-pos (car nodes)))
                                    (coerce x 'double-float))
                              (setf (v3y (state-pos (car nodes)))
                                    (+ y position-offset)))
-        (:mouse-button-down-event (:button button :state state :x x :y y)
+        (:mouse-button-down-event (:button button :y y)
                                   (cond
                                     ((eq button 1)
                                      (progn
