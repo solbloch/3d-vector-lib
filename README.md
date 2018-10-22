@@ -1,3 +1,3 @@
 3d-vector-lib
 ===================
-(load "load") then (in-package :test) in repl to use.
+Use (load "load.lisp") to import, then you can use (use-package :state) or (use-package :v3).
